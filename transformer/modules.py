@@ -20,6 +20,12 @@ class TokenEmbedding(nn.Module):
 class PositionalEncoding(nn.Module):
     def __init__(self, d_model, max_len=5000):
         super().__init__()
+
+        if d_model % 2 != 0:
+            raise ValueError(
+                f"d_model should be a multiple of 2. Got {d_model % 2}"
+            )
+
         pe = torch.zeros(max_len, d_model)
         position = torch.arange(
             0, max_len, dtype=torch.float
@@ -62,7 +68,7 @@ class TransformerEncoder(nn.Module):
             batch_first=True
         )
 
-        # Stack N identical encoder feature
+        # Stack N encoder feature
         self.encoder = nn.TransformerEncoder(
             encoder_layer=encoder_layer,
             num_layers=num_layers
@@ -71,7 +77,7 @@ class TransformerEncoder(nn.Module):
     def forward(
         self,
         src: torch.Tensor,                  # [B, S, D]
-        src_key_padding_mask: torch.Tensor, # [B, S]
+        src_key_padding_mask: torch.Tensor | None = None, # [B, S]
     ) -> torch.Tensor:
 
         output = self.encoder(
@@ -140,7 +146,7 @@ class OutputProjection(nn.Module):
 
     def forward(
         self,
-        input: torch.Tensor,        # [B, T, D]
+        x: torch.Tensor,        # [B, T, D]
     ) -> torch.Tensor:
-        output = self.linear(input) # [B, T, V]
+        output = self.linear(x) # [B, T, V]
         return output
