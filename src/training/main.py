@@ -3,8 +3,6 @@ import torch.nn as nn
 
 from config import (
     BATCH_SIZE,
-    CHECKPOINT_FILENAME,
-    CHECKPOINTS_DIR,
     CUDA_DEVICE,
     EPOCHS,
     INITIAL_BEST_VAL_LOSS,
@@ -14,7 +12,13 @@ from config import (
     PAD_IDX,
 )
 
-from training.checkpoint_utils import load_checkpoint, save_checkpoint
+from training.checkpoint_utils import (
+    get_checkpoint_path,
+    get_current_train_dir,
+    load_checkpoint,
+    log_loss,
+    save_checkpoint,
+)
 from training.load_data import create_dataloaders
 from training.training_utils import (
     create_model,
@@ -44,7 +48,7 @@ def main():
     optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
     best_val_loss = INITIAL_BEST_VAL_LOSS
-    checkpoint_path = CHECKPOINTS_DIR / CHECKPOINT_FILENAME
+    train_dir = get_current_train_dir()
 
     for epoch in range(1, EPOCHS + 1):
         train_loss = train_one_epoch(
@@ -61,6 +65,12 @@ def main():
             device=device,
         )
 
+        log_loss(
+            epoch=epoch,
+            train_loss=train_loss,
+            val_loss=val_loss,
+        )
+
         print(
             f"Epoch {epoch}/{EPOCHS} | "
             f"train loss: {train_loss:.4f} | "
@@ -74,12 +84,10 @@ def main():
                 optimizer=optimizer,
                 epoch=epoch,
                 val_loss=val_loss,
-                path=checkpoint_path,
             )
 
     best_checkpoint = load_checkpoint(
         model=model,
-        path=checkpoint_path,
         device=device,
     )
 
@@ -92,7 +100,8 @@ def main():
 
     print(f"Best epoch: {best_checkpoint['epoch']}")
     print(f"Test loss: {test_loss:.4f}")
-    print(f"Best checkpoint saved to: {checkpoint_path}")
+    print(f"Training logs saved to: {train_dir}")
+    print(f"Best checkpoint saved to: {get_checkpoint_path()}")
 
 
 if __name__ == "__main__":
