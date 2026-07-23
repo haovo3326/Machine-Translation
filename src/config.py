@@ -12,8 +12,8 @@ IWSLT14_DIR = DATASETS_DIR / "iwslt14"
 
 
 # Dataset settings
-SOURCE_LANGUAGE = "de"
-TARGET_LANGUAGE = "en"
+SOURCE_LANGUAGE = "en"
+TARGET_LANGUAGE = "de"
 TRAIN_SPLIT = "train"
 VAL_SPLIT = "val"
 TEST_SPLIT = "test"
