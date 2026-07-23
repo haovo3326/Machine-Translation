@@ -6,6 +6,8 @@ CURRENT_PATH = Path(__file__).resolve()
 PROJECT_ROOT = CURRENT_PATH.parents[1]
 DATASETS_DIR = PROJECT_ROOT / "datasets"
 ARTIFACTS_DIR = PROJECT_ROOT / "artifacts"
+VOCABS_DIR = ARTIFACTS_DIR / "vocabs"
+CHECKPOINTS_DIR = ARTIFACTS_DIR / "checkpoints"
 IWSLT14_DIR = DATASETS_DIR / "iwslt14"
 
 
@@ -32,6 +34,9 @@ LEARNING_RATE = 1e-4
 NUM_WORKERS = 0
 PIN_MEMORY = True
 CHECKPOINT_FILENAME = "best_translation_model.pt"
+TRAIN_DIR_PREFIX = "train"
+TRAIN_LOSS_FILENAME = "train_loss.json"
+VAL_LOSS_FILENAME = "val_loss.json"
 CUDA_DEVICE = "cuda"
 CPU_DEVICE = "cpu"
 TEXT_ENCODING = "utf-8"
