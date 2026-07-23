@@ -4,22 +4,28 @@ import json
 import torch
 from torch.utils.data import DataLoader, Dataset
 
-
-CURRENT_PATH = Path(__file__).resolve()
-PROJECT_ROOT = CURRENT_PATH.parents[2]
-DATASETS_DIR = PROJECT_ROOT / "datasets"
-ARTIFACTS_DIR = PROJECT_ROOT / "artifacts"
-IWSLT14_DIR = DATASETS_DIR / "iwslt14"
-
-
-PAD_IDX = 0
-UNK_IDX = 1
-BOS_IDX = 2
-EOS_IDX = 3
+from config import (
+    ARTIFACTS_DIR,
+    BATCH_SIZE,
+    BOS_IDX,
+    EOS_IDX,
+    IWSLT14_DIR,
+    MAX_LEN,
+    NUM_WORKERS,
+    PAD_IDX,
+    PIN_MEMORY,
+    SOURCE_LANGUAGE,
+    TARGET_LANGUAGE,
+    TEST_SPLIT,
+    TEXT_ENCODING,
+    TRAIN_SPLIT,
+    UNK_IDX,
+    VAL_SPLIT,
+)
 
 
 def load_json(path):
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, "r", encoding=TEXT_ENCODING) as f:
         return json.load(f)
 
 
@@ -34,9 +40,9 @@ def load_vocab(language):
 
 
 class TranslationDataset(Dataset):
-    def __init__(self, src_path, tgt_path, src_vocab, tgt_vocab, max_len=256):
-        self.src_lines = Path(src_path).read_text(encoding="utf-8").splitlines()
-        self.tgt_lines = Path(tgt_path).read_text(encoding="utf-8").splitlines()
+    def __init__(self, src_path, tgt_path, src_vocab, tgt_vocab, max_len=MAX_LEN):
+        self.src_lines = Path(src_path).read_text(encoding=TEXT_ENCODING).splitlines()
+        self.tgt_lines = Path(tgt_path).read_text(encoding=TEXT_ENCODING).splitlines()
         self.src_vocab = src_vocab
         self.tgt_vocab = tgt_vocab
         self.max_len = max_len
@@ -96,10 +102,10 @@ def collate_fn(batch):
     }
 
 
-def create_dataset(split, src_vocab, tgt_vocab, max_len=256):
+def create_dataset(split, src_vocab, tgt_vocab, max_len=MAX_LEN):
     return TranslationDataset(
-        IWSLT14_DIR / f"{split}.de",
-        IWSLT14_DIR / f"{split}.en",
+        IWSLT14_DIR / f"{split}.{SOURCE_LANGUAGE}",
+        IWSLT14_DIR / f"{split}.{TARGET_LANGUAGE}",
         src_vocab,
         tgt_vocab,
         max_len=max_len,
@@ -110,11 +116,11 @@ def create_dataloader(
     split,
     src_vocab,
     tgt_vocab,
-    batch_size=64,
+    batch_size=BATCH_SIZE,
     shuffle=False,
-    max_len=256,
-    num_workers=2,
-    pin_memory=True,
+    max_len=MAX_LEN,
+    num_workers=NUM_WORKERS,
+    pin_memory=PIN_MEMORY,
 ):
     dataset = create_dataset(
         split=split,
@@ -133,12 +139,17 @@ def create_dataloader(
     )
 
 
-def create_dataloaders(batch_size=64, max_len=256, num_workers=2, pin_memory=True):
-    de_token_to_idx, de_idx_to_token = load_vocab("de")
-    en_token_to_idx, en_idx_to_token = load_vocab("en")
+def create_dataloaders(
+    batch_size=BATCH_SIZE,
+    max_len=MAX_LEN,
+    num_workers=NUM_WORKERS,
+    pin_memory=PIN_MEMORY,
+):
+    de_token_to_idx, de_idx_to_token = load_vocab(SOURCE_LANGUAGE)
+    en_token_to_idx, en_idx_to_token = load_vocab(TARGET_LANGUAGE)
 
     train_loader = create_dataloader(
-        split="train",
+        split=TRAIN_SPLIT,
         src_vocab=de_token_to_idx,
         tgt_vocab=en_token_to_idx,
         batch_size=batch_size,
@@ -148,7 +159,7 @@ def create_dataloaders(batch_size=64, max_len=256, num_workers=2, pin_memory=Tru
         pin_memory=pin_memory,
     )
     val_loader = create_dataloader(
-        split="val",
+        split=VAL_SPLIT,
         src_vocab=de_token_to_idx,
         tgt_vocab=en_token_to_idx,
         batch_size=batch_size,
@@ -158,7 +169,7 @@ def create_dataloaders(batch_size=64, max_len=256, num_workers=2, pin_memory=Tru
         pin_memory=pin_memory,
     )
     test_loader = create_dataloader(
-        split="test",
+        split=TEST_SPLIT,
         src_vocab=de_token_to_idx,
         tgt_vocab=en_token_to_idx,
         batch_size=batch_size,

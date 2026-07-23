@@ -1,9 +1,20 @@
-from pathlib import Path
-
 import torch
 import torch.nn as nn
 
-from training.load_data import PAD_IDX, create_dataloaders
+from config import (
+    ARTIFACTS_DIR,
+    BATCH_SIZE,
+    CHECKPOINT_FILENAME,
+    CUDA_DEVICE,
+    EPOCHS,
+    INITIAL_BEST_VAL_LOSS,
+    LEARNING_RATE,
+    MAX_LEN,
+    NUM_WORKERS,
+    PAD_IDX,
+)
+
+from training.load_data import create_dataloaders
 from training.training_utils import (
     create_model,
     evaluate,
@@ -14,17 +25,6 @@ from training.training_utils import (
 )
 
 
-CURRENT_PATH = Path(__file__).resolve()
-PROJECT_ROOT = CURRENT_PATH.parents[2]
-ARTIFACTS_DIR = PROJECT_ROOT / "artifacts"
-
-
-BATCH_SIZE = 64
-MAX_LEN = 256
-EPOCHS = 10
-LEARNING_RATE = 1e-4
-
-
 def main():
     device = get_device()
     print(f"Using device: {device}")
@@ -32,8 +32,8 @@ def main():
     train_loader, val_loader, test_loader, vocabs = create_dataloaders(
         batch_size=BATCH_SIZE,
         max_len=MAX_LEN,
-        num_workers=0,
-        pin_memory=device.type == "cuda",
+        num_workers=NUM_WORKERS,
+        pin_memory=device.type == CUDA_DEVICE,
     )
 
     model = create_model(
@@ -44,8 +44,8 @@ def main():
     criterion = nn.CrossEntropyLoss(ignore_index=PAD_IDX)
     optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
-    best_val_loss = float("inf")
-    checkpoint_path = ARTIFACTS_DIR / "best_translation_model.pt"
+    best_val_loss = INITIAL_BEST_VAL_LOSS
+    checkpoint_path = ARTIFACTS_DIR / CHECKPOINT_FILENAME
 
     for epoch in range(1, EPOCHS + 1):
         train_loss = train_one_epoch(
