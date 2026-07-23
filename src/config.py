@@ -6,6 +6,8 @@ CURRENT_PATH = Path(__file__).resolve()
 PROJECT_ROOT = CURRENT_PATH.parents[1]
 DATASETS_DIR = PROJECT_ROOT / "datasets"
 ARTIFACTS_DIR = PROJECT_ROOT / "artifacts"
+VOCABS_DIR = ARTIFACTS_DIR / "vocabs"
+CHECKPOINTS_DIR = ARTIFACTS_DIR / "checkpoints"
 IWSLT14_DIR = DATASETS_DIR / "iwslt14"
 
 

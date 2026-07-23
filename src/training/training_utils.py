@@ -103,6 +103,8 @@ def evaluate(model, data_loader, criterion, device):
 
 
 def save_checkpoint(model, optimizer, epoch, val_loss, path):
+    path.parent.mkdir(parents=True, exist_ok=True)
+
     checkpoint = {
         "epoch": epoch,
         "model_state_dict": model.state_dict(),

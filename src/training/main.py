@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 
 from config import (
-    ARTIFACTS_DIR,
     BATCH_SIZE,
     CHECKPOINT_FILENAME,
+    CHECKPOINTS_DIR,
     CUDA_DEVICE,
     EPOCHS,
     INITIAL_BEST_VAL_LOSS,
@@ -45,7 +45,7 @@ def main():
     optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
     best_val_loss = INITIAL_BEST_VAL_LOSS
-    checkpoint_path = ARTIFACTS_DIR / CHECKPOINT_FILENAME
+    checkpoint_path = CHECKPOINTS_DIR / CHECKPOINT_FILENAME
 
     for epoch in range(1, EPOCHS + 1):
         train_loss = train_one_epoch(

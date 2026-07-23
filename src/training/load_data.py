@@ -5,7 +5,6 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 
 from config import (
-    ARTIFACTS_DIR,
     BATCH_SIZE,
     BOS_IDX,
     EOS_IDX,
@@ -21,6 +20,7 @@ from config import (
     TRAIN_SPLIT,
     UNK_IDX,
     VAL_SPLIT,
+    VOCABS_DIR,
 )
 
 
@@ -30,8 +30,8 @@ def load_json(path):
 
 
 def load_vocab(language):
-    token_to_idx_path = ARTIFACTS_DIR / f"{language}_token_to_idx.json"
-    idx_to_token_path = ARTIFACTS_DIR / f"{language}_idx_to_token.json"
+    token_to_idx_path = VOCABS_DIR / f"{language}_token_to_idx.json"
+    idx_to_token_path = VOCABS_DIR / f"{language}_idx_to_token.json"
 
     token_to_idx = load_json(token_to_idx_path)
     idx_to_token = load_json(idx_to_token_path)
