@@ -1,9 +1,21 @@
 import torch
 from transformer.models import EncoderDecoderModel
 
+from config import (
+    CPU_DEVICE,
+    CUDA_DEVICE,
+    DIM_FEEDFORWARD,
+    D_MODEL,
+    DROPOUT,
+    MAX_LEN,
+    N_HEAD,
+    NUM_DECODER_LAYERS,
+    NUM_ENCODER_LAYERS,
+)
+
 
 def get_device():
-    return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    return torch.device(CUDA_DEVICE if torch.cuda.is_available() else CPU_DEVICE)
 
 def move_batch_to_device(batch, device):
     return {
@@ -17,16 +29,16 @@ def create_tgt_mask(tgt_len, device):
         diagonal=1,
     )
 
-def create_model(vocabs, device, max_len):
+def create_model(vocabs, device, max_len=MAX_LEN):
     model = EncoderDecoderModel(
         src_vocab_size=len(vocabs["src_token_to_idx"]),
         tgt_vocab_size=len(vocabs["tgt_token_to_idx"]),
-        d_model=256,
-        n_head=4,
-        num_encoder_layers=3,
-        num_decoder_layers=3,
-        dim_feedforward=1024,
-        dropout=0.1,
+        d_model=D_MODEL,
+        n_head=N_HEAD,
+        num_encoder_layers=NUM_ENCODER_LAYERS,
+        num_decoder_layers=NUM_DECODER_LAYERS,
+        dim_feedforward=DIM_FEEDFORWARD,
+        dropout=DROPOUT,
         max_len=max_len,
     )
 
