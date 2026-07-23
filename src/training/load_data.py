@@ -145,13 +145,13 @@ def create_dataloaders(
     num_workers=NUM_WORKERS,
     pin_memory=PIN_MEMORY,
 ):
-    de_token_to_idx, de_idx_to_token = load_vocab(SOURCE_LANGUAGE)
-    en_token_to_idx, en_idx_to_token = load_vocab(TARGET_LANGUAGE)
+    src_token_to_idx, src_idx_to_token = load_vocab(SOURCE_LANGUAGE)
+    tgt_token_to_idx, tgt_idx_to_token = load_vocab(TARGET_LANGUAGE)
 
     train_loader = create_dataloader(
         split=TRAIN_SPLIT,
-        src_vocab=de_token_to_idx,
-        tgt_vocab=en_token_to_idx,
+        src_vocab=src_token_to_idx,
+        tgt_vocab=tgt_token_to_idx,
         batch_size=batch_size,
         shuffle=True,
         max_len=max_len,
@@ -160,8 +160,8 @@ def create_dataloaders(
     )
     val_loader = create_dataloader(
         split=VAL_SPLIT,
-        src_vocab=de_token_to_idx,
-        tgt_vocab=en_token_to_idx,
+        src_vocab=src_token_to_idx,
+        tgt_vocab=tgt_token_to_idx,
         batch_size=batch_size,
         shuffle=False,
         max_len=max_len,
@@ -170,8 +170,8 @@ def create_dataloaders(
     )
     test_loader = create_dataloader(
         split=TEST_SPLIT,
-        src_vocab=de_token_to_idx,
-        tgt_vocab=en_token_to_idx,
+        src_vocab=src_token_to_idx,
+        tgt_vocab=tgt_token_to_idx,
         batch_size=batch_size,
         shuffle=False,
         max_len=max_len,
@@ -180,10 +180,10 @@ def create_dataloaders(
     )
 
     vocabs = {
-        "src_token_to_idx": de_token_to_idx,
-        "src_idx_to_token": de_idx_to_token,
-        "tgt_token_to_idx": en_token_to_idx,
-        "tgt_idx_to_token": en_idx_to_token,
+        "src_token_to_idx": src_token_to_idx,
+        "src_idx_to_token": src_idx_to_token,
+        "tgt_token_to_idx": tgt_token_to_idx,
+        "tgt_idx_to_token": tgt_idx_to_token,
     }
 
     return train_loader, val_loader, test_loader, vocabs
