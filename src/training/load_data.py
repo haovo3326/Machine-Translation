@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader, Dataset
 
 CURRENT_PATH = Path(__file__).resolve()
 PROJECT_ROOT = CURRENT_PATH.parents[2]
-DATA_DIR = PROJECT_ROOT / "datasets" / "iwslt14"
+IWSLT14_DIR = PROJECT_ROOT / "datasets" / "iwslt14"
 ARTIFACTS_DIR = PROJECT_ROOT / "artifacts"
 
 PAD_IDX = 0
@@ -96,8 +96,8 @@ def collate_fn(batch):
 
 def create_dataset(split, src_vocab, tgt_vocab, max_len=256):
     return TranslationDataset(
-        DATA_DIR / f"{split}.de",
-        DATA_DIR / f"{split}.en",
+        IWSLT14_DIR / f"{split}.de",
+        IWSLT14_DIR / f"{split}.en",
         src_vocab,
         tgt_vocab,
         max_len=max_len,
