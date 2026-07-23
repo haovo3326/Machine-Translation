@@ -14,13 +14,12 @@ from config import (
     PAD_IDX,
 )
 
+from training.checkpoint_utils import load_checkpoint, save_checkpoint
 from training.load_data import create_dataloaders
 from training.training_utils import (
     create_model,
     evaluate,
     get_device,
-    load_checkpoint,
-    save_checkpoint,
     train_one_epoch,
 )
 
@@ -62,6 +61,12 @@ def main():
             device=device,
         )
 
+        print(
+            f"Epoch {epoch}/{EPOCHS} | "
+            f"train loss: {train_loss:.4f} | "
+            f"val loss: {val_loss:.4f}"
+        )
+
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             save_checkpoint(
@@ -71,12 +76,6 @@ def main():
                 val_loss=val_loss,
                 path=checkpoint_path,
             )
-
-        print(
-            f"Epoch {epoch}/{EPOCHS} | "
-            f"train loss: {train_loss:.4f} | "
-            f"val loss: {val_loss:.4f}"
-        )
 
     best_checkpoint = load_checkpoint(
         model=model,
