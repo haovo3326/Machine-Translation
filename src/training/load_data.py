@@ -7,8 +7,10 @@ from torch.utils.data import DataLoader, Dataset
 
 CURRENT_PATH = Path(__file__).resolve()
 PROJECT_ROOT = CURRENT_PATH.parents[2]
-IWSLT14_DIR = PROJECT_ROOT / "datasets" / "iwslt14"
+DATASETS_DIR = PROJECT_ROOT / "datasets"
 ARTIFACTS_DIR = PROJECT_ROOT / "artifacts"
+IWSLT14_DIR = DATASETS_DIR / "iwslt14"
+
 
 PAD_IDX = 0
 UNK_IDX = 1
