@@ -70,7 +70,9 @@ def train_one_epoch(model, train_loader, criterion, optimizer, device):
     model.train()
     total_loss = 0
 
-    for batch in train_loader:
+    for batch_idx, batch in enumerate(train_loader, start=1):
+        print(f"Training batch {batch_idx}/{len(train_loader)}")
+
         batch = move_batch_to_device(batch, device)
 
         optimizer.zero_grad()
@@ -91,7 +93,9 @@ def evaluate(model, data_loader, criterion, device):
     total_loss = 0
 
     with torch.no_grad():
-        for batch in data_loader:
+        for batch_idx, batch in enumerate(data_loader, start=1):
+            print(f"Evaluating batch {batch_idx}/{len(data_loader)}")
+
             batch = move_batch_to_device(batch, device)
 
             logits = forward_batch(model, batch)
