@@ -102,3 +102,58 @@ class EncoderDecoderModel(nn.Module):
         logits = self.output_projection(output)
 
         return logits
+
+    def greedy_decode(
+        self,
+        src: torch.Tensor,
+        src_key_padding_mask: torch.Tensor | None = None,
+        bos_idx: int = 2,
+        eos_idx: int = 3,
+        max_len: int = 256,
+    ) -> list[list[int]]:
+        batch_size = src.size(0)
+        device = src.device
+        decoded = [[] for _ in range(batch_size)]
+        active_indices = torch.arange(batch_size, device=device)
+        active_src = src
+        active_src_key_padding_mask = src_key_padding_mask
+        active_tgt = torch.full(
+            (batch_size, 1),
+            bos_idx,
+            dtype=torch.long,
+            device=device,
+        )
+
+        for _ in range(max_len - 1):
+            tgt_len = active_tgt.size(1)
+            tgt_mask = torch.triu(
+                torch.ones(tgt_len, tgt_len, dtype=torch.bool, device=device),
+                diagonal=1,
+            )
+            logits = self(
+                src=active_src,
+                tgt=active_tgt,
+                src_key_padding_mask=active_src_key_padding_mask,
+                tgt_mask=tgt_mask,
+            )
+            next_token = logits[:, -1, :].argmax(dim=-1)
+            for sequence_idx, token_id in zip(
+                active_indices.tolist(),
+                next_token.tolist(),
+            ):
+                decoded[sequence_idx].append(token_id)
+
+            keep_mask = next_token.ne(eos_idx)
+            if not keep_mask.any():
+                break
+
+            active_indices = active_indices[keep_mask]
+            active_src = active_src[keep_mask]
+            if active_src_key_padding_mask is not None:
+                active_src_key_padding_mask = active_src_key_padding_mask[keep_mask]
+            active_tgt = torch.cat(
+                [active_tgt, next_token.unsqueeze(1)],
+                dim=1,
+            )[keep_mask]
+
+        return decoded
