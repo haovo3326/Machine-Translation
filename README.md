@@ -6,7 +6,7 @@ Implementation of original Encoder-Decoder transformer architecture for English-
   <em>Source: Attention Is All You Need (2017)</em>
 </p>
 
-## Introduction
+## About
 This project aims to utilize the classical Encoder-Decoder architecture to perform machine translation on the [IWSLT14 dataset](https://www.kaggle.com/datasets/qcriwgao/iwslt14).
 
 ## Project Structure
@@ -39,7 +39,7 @@ The architecture used for the project is **Encoder-Decoder** structure, with the
 - **Self-Attention Mechanism**: For every tokens, the model generates three vectors: **Query (Q)**, **Key (K)** and **Value (V)**, which then be aggregated into three matrices. After that, the model perform attention score calculation to determine the mutual relationships between every pairs of tokens.
 - **Multi-head Attention**: Run multiple self-attention mechanisms in parallel to learn more variety of contextual and lingustic nuances between tokens while keeping the computational cost comparable to single self-attention head.
 
-Here is the model settings used in this project. The following configuration is contained in config.py.
+Here are the model settings used in this project. The following configurations are contained in config.py.
 ```python
 # Model settings
 D_MODEL = 256
@@ -50,7 +50,7 @@ DIM_FEEDFORWARD = 1024
 DROPOUT = 0.1
 ```
 ## Dataset
-The **IWSLT14 dataset** contains three splits including **train**, **evaluation** and **test**. Each splits consists of two parallel text files of **Byte Pair Encoding (BPE)** tokenized sentences, aligned in line-by-line manner. Table 1 summarizes the number of samples for each categories.
+The **IWSLT14 dataset** contains three splits including **train**, **evaluation** and **test**. Each split consists of two parallel text files of **Byte Pair Encoding (BPE)** tokenized sentences, aligned in line-by-line manner. Table 1 summarizes the number of samples for each category.
 
 <div align="center">
 
@@ -87,7 +87,7 @@ Machine Translation/
         ├── training_utils.py
 ```
 
-Both pretrained models share the same architectural and **EN - DE** training configurations. The only difference is the number of training epochs: the model in **train0** was trained for **10 epochs** while the other one in **train1** was trained for **20 epoches**. The training and validation log of both models are presented Figure 1 and Figure 2 respectively.
+Both pretrained models share the same architectural and **EN - DE** training configurations. The only difference is the number of training epochs: the model in **train0** was trained for **10 epochs** while the other one in **train1** was trained for **20 epoches**. The training and validation log of both models are presented as Figure 1 and Figure 2 respectively.
 
 <p align="center">
   <em>Figure 1. Training and validation loss of model "train0".</em>
@@ -123,7 +123,24 @@ After the training session, both models undergone BLEU scoring on **test** datas
 *Source: Dependency-aware self-attention for robust neural machine translation (2026)*
 </div>
 
+## Installation
 
+Clone the repository and navigate to project directory:
+```bash
+git clone https://github.com/haovo3326/Machine-Translation.git
+cd Machine-Translation
+```
+Create a virtual environment (optional):
+```bash
+conda create -n machine-translation python=3.11
+conda activate machine-translation
+```
+
+Install the required dependencies:
+```bash
+pip install -r requirements.txt
+```
+ 
 
 
 
