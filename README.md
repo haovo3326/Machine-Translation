@@ -9,6 +9,24 @@ Implementation of original Encoder-Decoder transformer architecture for English-
 ## About
 This project aims to utilize the classical Encoder-Decoder architecture to perform machine translation on the [IWSLT14 dataset](https://www.kaggle.com/datasets/qcriwgao/iwslt14).
 
+## Installation
+
+Clone the repository and navigate to project directory:
+```bash
+git clone https://github.com/haovo3326/Machine-Translation.git
+cd Machine-Translation
+```
+Create a virtual environment (optional):
+```bash
+conda create -n machine-translation python=3.11
+conda activate machine-translation
+```
+
+Install the required dependencies:
+```bash
+pip install -r requirements.txt
+```
+
 ## Project Structure
 ```text
 Machine Translation/
@@ -122,24 +140,6 @@ After the training session, both models undergone BLEU scoring on **test** datas
 
 *Source: Dependency-aware self-attention for robust neural machine translation (2026)*
 </div>
-
-## Installation
-
-Clone the repository and navigate to project directory:
-```bash
-git clone https://github.com/haovo3326/Machine-Translation.git
-cd Machine-Translation
-```
-Create a virtual environment (optional):
-```bash
-conda create -n machine-translation python=3.11
-conda activate machine-translation
-```
-
-Install the required dependencies:
-```bash
-pip install -r requirements.txt
-```
  
 
 
