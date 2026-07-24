@@ -87,7 +87,7 @@ def bleu(model, data_loader, device):
 def main():
     device = get_device()
     print(f"Using device: {device}")
-    checkpoint_path = CHECKPOINTS_DIR / "train0" / "best_translation_model.pt"
+    checkpoint_path = CHECKPOINTS_DIR / "train1" / "best_translation_model.pt"
     assert checkpoint_path.exists()
 
     model = load_checkpoint_model(checkpoint_path, device)
